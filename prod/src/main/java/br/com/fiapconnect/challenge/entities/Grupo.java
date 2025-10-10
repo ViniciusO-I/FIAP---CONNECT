@@ -1,4 +1,4 @@
-package br.com.sprint1.challenge.prod.entities;
+package br.com.fiapconnect.challenge.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @NonNull
-
 @Entity
 public class Grupo {
 

@@ -1,4 +1,4 @@
-package br.com.sprint1.challenge.prod;
+package br.com.fiapconnect.challenge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

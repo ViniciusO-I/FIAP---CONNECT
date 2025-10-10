@@ -1,4 +1,4 @@
-package br.com.sprint1.challenge.prod;
+package br.com.fiapconnect.challenge;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

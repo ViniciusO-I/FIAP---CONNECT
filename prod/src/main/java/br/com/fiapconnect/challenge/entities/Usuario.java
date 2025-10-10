@@ -1,4 +1,4 @@
-package br.com.sprint1.challenge.prod.entities;
+package br.com.fiapconnect.challenge.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
