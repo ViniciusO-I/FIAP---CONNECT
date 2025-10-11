@@ -1,8 +1,13 @@
 package br.com.fiapconnect.challenge.dto;
 
-public class GrupoOutDto {
+import lombok.Getter;
+import lombok.Setter;
 
+//dado saida do grupo
+@Getter
+@Setter
+public class GrupoOutDto {
     public Long id;
-    public String nomeDoProjeto;
-    public String status;
+    private String nomeDoProjeto;
+    private String status;
 }

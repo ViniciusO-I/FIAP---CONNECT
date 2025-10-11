@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long > {
-
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByRm(String rm);
     List<Usuario> findByTurma(String turma);
+    List<Usuario> findByTurmaIgnoreCase(String turma);
     List<Usuario> findByNomeContainingIgnoreCase(String nome);
 }

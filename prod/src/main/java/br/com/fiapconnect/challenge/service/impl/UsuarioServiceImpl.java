@@ -1,14 +1,9 @@
 package br.com.fiapconnect.challenge.service.impl;
 
-import br.com.fiapconnect.challenge.dto.GrupoInDto;
-import br.com.fiapconnect.challenge.dto.GrupoOutDto;
 import br.com.fiapconnect.challenge.dto.UsuarioInDto;
 import br.com.fiapconnect.challenge.dto.UsuarioOutDto;
-import br.com.fiapconnect.challenge.entities.Grupo;
 import br.com.fiapconnect.challenge.entities.Usuario;
-import br.com.fiapconnect.challenge.repositories.GrupoRepository;
 import br.com.fiapconnect.challenge.repositories.UsuarioRepository;
-import br.com.fiapconnect.challenge.service.GrupoService;
 import br.com.fiapconnect.challenge.service.UsuarioService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,79 +13,89 @@ import java.util.List;
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository repositorio;
+    private final UsuarioRepository usuarioRepository;
 
-    public UsuarioServiceImpl(UsuarioRepository repositorio) {
-        this.repositorio = repositorio;
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
+    // criar um novo usuario
     @Transactional
-    public UsuarioOutDto criar(UsuarioInDto in) {
-        if (in == null || vazio(in.rm) || vazio(in.nome)) {
-            throw new IllegalArgumentException("rm obrigatorioo");
+    public UsuarioOutDto criar(UsuarioInDto usuarioEntrada) {
+        if (usuarioEntrada == null || campoVazio(usuarioEntrada.getRm()) || campoVazio(usuarioEntrada.getNome())) {
+            throw new IllegalArgumentException("rm nome obrigatorio");
         }
-        repositorio.findByRm(in.rm).ifPresent(usuario -> {
-            throw new IllegalArgumentException("o cadastro ja existe");
+
+        usuarioRepository.findByRm(usuarioEntrada.getRm()).ifPresent(usuarioExistente -> {
+            throw new IllegalArgumentException("rm ja cadastrado");
         });
 
-        Usuario usuario = new Usuario();
-        usuario.setRm(in.rm);
-        usuario.setNome(in.nome);
-        usuario.setTurma(in.turma);
-        usuario = repositorio.save(usuario);
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setRm(usuarioEntrada.getRm());
+        novoUsuario.setNome(usuarioEntrada.getNome());
+        novoUsuario.setTurma(usuarioEntrada.getTurma());
 
-        UsuarioOutDto out = new UsuarioOutDto();
-        out.id = usuario.getId();
-        out.rm = usuario.getRm();
-        out.nome = usuario.getNome();
-        out.turma = usuario.getTurma();
-        return out;
+        novoUsuario = usuarioRepository.save(novoUsuario);
+
+        UsuarioOutDto usuarioSaida = new UsuarioOutDto();
+        usuarioSaida.setId(novoUsuario.getId());
+        usuarioSaida.setRm(novoUsuario.getRm());
+        usuarioSaida.setNome(novoUsuario.getNome());
+        usuarioSaida.setTurma(novoUsuario.getTurma());
+        return usuarioSaida;
     }
 
+    // listar
     @Transactional(readOnly = true)
-    public List<UsuarioOutDto> listar(String turma, String nome) {
-        List<Usuario> lista;
-        if (!vazio(turma)) {
-            lista = repositorio.findByTurma(turma);
-        } else if (!vazio(nome)) {
-            lista = repositorio.findByNomeContainingIgnoreCase(nome);
+    public List<UsuarioOutDto> listar(String filtroTurma, String filtroNome) {
+        List<Usuario> listaUsuarios;
+
+        if (!campoVazio(filtroTurma)) {
+            listaUsuarios = usuarioRepository.findByTurma(filtroTurma);
+        } else if (!campoVazio(filtroNome)) {
+            listaUsuarios = usuarioRepository.findByNomeContainingIgnoreCase(filtroNome);
         } else {
-            lista = repositorio.findAll();
+            listaUsuarios = usuarioRepository.findAll();
         }
-        return lista.stream().map(usuario -> {
-            UsuarioOutDto out = new UsuarioOutDto();
-            out.id = usuario.getId();
-            out.rm = usuario.getRm();
-            out.nome = usuario.getNome();
-            out.turma = usuario.getTurma();
-            return out;
+
+        return listaUsuarios.stream().map(usuario -> {
+            UsuarioOutDto usuarioSaida = new UsuarioOutDto();
+            usuarioSaida.setId(usuario.getId());
+            usuarioSaida.setRm(usuario.getRm());
+            usuarioSaida.setNome(usuario.getNome());
+            usuarioSaida.setTurma(usuario.getTurma());
+            return usuarioSaida;
         }).toList();
     }
 
-    @Override
-    public UsuarioOutDto buscarId(Long id) {
-        return null;
-    }
+
+    // retorna id
 
     @Transactional(readOnly = true)
-    public UsuarioOutDto buscarPorId(Long id) {
-        Usuario novoUsuario = repositorio.findById(id).orElseThrow(() -> new IllegalArgumentException("usuario nao existe"));
-        UsuarioOutDto out = new UsuarioOutDto();
-        out.id = novoUsuario.getId();
-        out.rm = novoUsuario.getRm();
-        out.nome = novoUsuario.getNome();
-        out.turma = novoUsuario.getTurma();
-        return out;
+    public UsuarioOutDto buscarPorId(Long identificadorUsuario) {
+        var usuarioEncontrado = usuarioRepository.findById(identificadorUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("usuario nao encontrado"));
+
+        var usuarioSaida = new UsuarioOutDto();
+        usuarioSaida.setId(usuarioEncontrado.getId());
+        usuarioSaida.setRm(usuarioEncontrado.getRm());
+        usuarioSaida.setNome(usuarioEncontrado.getNome());
+        usuarioSaida.setTurma(usuarioEncontrado.getTurma());
+        return usuarioSaida;
     }
+
+
 
     @Transactional
-    public void deletar(Long id) {
-        if (!repositorio.existsById(id)) throw new IllegalArgumentException("usuario nao existe");
-        repositorio.deleteById(id);
+    public void deletar(Long identificadorUsuario) {
+        if (!usuarioRepository.existsById(identificadorUsuario)) {
+            throw new IllegalArgumentException(" vazio-deletar");
+        }
+        usuarioRepository.deleteById(identificadorUsuario);
     }
 
-    private static boolean vazio(String resultado) {
 
-        return resultado == null || resultado.isBlank();
+    private static boolean campoVazio(String textoCampo) {
+        return textoCampo == null || textoCampo.isBlank();
     }
 }

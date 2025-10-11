@@ -6,8 +6,10 @@ import br.com.fiapconnect.challenge.dto.GrupoOutDto;
 import java.util.List;
 
 public interface GrupoService {
-    GrupoOutDto criar(GrupoInDto in);
-    List<GrupoOutDto> listar(String status, String nome);
-    GrupoOutDto buscarId(Long id);
-    void deletar(Long id);
+    GrupoOutDto criar(GrupoInDto grupoEntrada);
+    List<GrupoOutDto> listar(String filtroStatus, String filtroNome);
+    GrupoOutDto buscarPorId(Long identificadorGrupo);
+    void deletar(Long identificadorGrupo);
+
+
 }

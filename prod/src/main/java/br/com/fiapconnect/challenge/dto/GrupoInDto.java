@@ -1,7 +1,12 @@
 package br.com.fiapconnect.challenge.dto;
 
-public class GrupoInDto {
+import lombok.Getter;
+import lombok.Setter;
 
-    public String nomeDoProjeto;
-    public String status;
+//criar grupo
+@Getter
+@Setter
+public class GrupoInDto {
+    private String nomeDoProjeto;
+    private String status;
 }

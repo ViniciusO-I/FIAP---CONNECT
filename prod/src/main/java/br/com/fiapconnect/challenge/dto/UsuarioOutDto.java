@@ -1,9 +1,14 @@
 package br.com.fiapconnect.challenge.dto;
 
-public class UsuarioOutDto {
+import lombok.Getter;
+import lombok.Setter;
 
-    public Long id;
-    public String rm;
-    public String nome;
-    public String turma;
+// dado  saida do usuario
+@Getter
+@Setter
+public class UsuarioOutDto {
+    private Long id;
+    private String rm;
+    private String nome;
+    private String turma;
 }

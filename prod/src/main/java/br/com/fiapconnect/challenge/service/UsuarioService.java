@@ -4,12 +4,9 @@ import br.com.fiapconnect.challenge.dto.UsuarioInDto;
 import br.com.fiapconnect.challenge.dto.UsuarioOutDto;
 
 import java.util.List;
-
 public interface UsuarioService {
-
-    UsuarioOutDto criar(UsuarioInDto in);
-    List<UsuarioOutDto> listar(String turma, String nome);
-    UsuarioOutDto buscarId(Long id);
-    void deletar(Long id);
-
+    UsuarioOutDto criar(UsuarioInDto usuarioEntrada);
+    List<UsuarioOutDto> listar(String filtroTurma, String filtroNome);
+    UsuarioOutDto buscarPorId(Long identificadorUsuario);
+    void deletar(Long identificadorUsuario);
 }
